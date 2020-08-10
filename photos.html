@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
+	<title>Weather Forecast</title>
+	<!-- Loading third party fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
+	<link href="fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!-- Loading main css file -->
+	<link rel="stylesheet" href="style.css">
+	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"> -->
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		.photo:hover {
+			transform: scale(1.01);
+			box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.6);
+		}
+
+		.row>.column {
+			padding: 0 8px;
+		}
+
+		.row:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+
+		.column {
+			float: left;
+			width: 5.5%;
+		}
+
+		/* The Modal (background) */
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 2;
+			padding-top: 100px;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: black;
+		}
+
+		/* Modal Content */
+		.modal-content {
+			position: relative;
+			background-color: #fefefe;
+			margin: auto;
+			padding: 0;
+			width: 90%;
+			max-width: 900px;
+		}
+
+		/* The Close Button */
+		.close {
+			color: white;
+			position: absolute;
+			top: 10px;
+			right: 25px;
+			font-size: 35px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: #999;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.mySlides {
+			display: none;
+		}
+
+		.cursor {
+			cursor: pointer;
+		}
+
+		/* Next & previous buttons */
+		.eprev,
+		.enext {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			width: auto;
+			padding: 16px;
+			margin-top: -50px;
+			color: white;
+			font-weight: bold;
+			font-size: 20px;
+			transition: 0.6s ease;
+			border-radius: 0 3px 3px 0;
+			user-select: none;
+			-webkit-user-select: none;
+		}
+
+		/* Position the "next button" to the right */
+		.enext {
+			right: 0;
+			border-radius: 3px 0 0 3px;
+		}
+
+		/* On hover, add a black background color with a little bit see-through */
+		.eprev:hover,
+		.enext:hover {
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		/* Number text (1/3 etc) */
+		.numbertext {
+			color: #f2f2f2;
+			font-size: 12px;
+			padding: 8px 12px;
+			position: absolute;
+			top: 0;
+		}
+
+		img {
+			margin-bottom: -4px;
+		}
+
+		.caption-container {
+			text-align: center;
+			background-color: black;
+			padding: 2px 16px;
+			color: white;
+		}
+
+		.demo {
+			opacity: 0.6;
+		}
+
+		.active,
+		.demo:hover {
+			opacity: 1;
+		}
+
+		img.hover-shadow {
+			transition: 0.3s;
+		}
+
+		.hover-shadow:hover {
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
+
+		.simple-pagination ul {
+			margin: 0 0 20px;
+			padding: 0;
+			list-style: none;
+			text-align: center;
+		}
+
+		.simple-pagination li {
+			display: inline-block;
+			margin-right: 5px;
+		}
+
+		.simple-pagination li a,
+		.simple-pagination li span {
+			color: black;
+			padding: 5px 10px;
+			text-decoration: none;
+			border: 1px solid black;
+			background-color: #FFF;
+			border-radius: 50%;
+
+		}
+
+		.simple-pagination .current {
+			color: #FFF;
+			background-color: #009ad8;
+			border-color: #009ad8;
+		}
+
+		.simple-pagination .prev.current,
+		.simple-pagination .next.current {
+			background: #009ad8;
+
+		}
+
+		.prev,
+		.next {
+			position: relative;
+			font-size: inherit;
+			border-radius: 0px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="site-content">
+		<div class="site-header">
+			<div class="container">
+				<a href="index.html" class="branding">
+					<img src="images/logo.png" alt="" class="logo">
+					<div class="logo-type">
+						<h1 class="site-title">Weather Company</h1>
+						<small class="site-description">forecast weather</small>
+					</div>
+				</a>
+				<!-- Default snippet for navigation -->
+				<div class="main-navigation">
+					<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+					<ul class="menu">
+						<li class="menu-item"><a href="index.html">Home</a></li>
+
+
+						<li class="menu-item current-menu-item"><a href="photos.html">Photos</a></li>
+						<li class="menu-item"><a href="contact.html">Contact</a></li>
+					</ul> <!-- .menu -->
+				</div> <!-- .main-navigation -->
+
+				<div class="mobile-navigation"></div>
+
+			</div>
+		</div> <!-- .site-header -->
+
+		<main class="main-content">
+			<div class="container">
+				<div class="breadcrumb">
+					<a href="index.html">Home</a>
+					<span>Photos</span>
+				</div>
+			</div>
+
+			<div class="fullwidth-block">
+				<div class="container">
+					<div class="row list-wrapper">
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo1.jpg" style="width:100%"
+										onclick="openModal();currentSlide(1)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Bridges to the past</a></h3>
+									<p>The story of this sandstone formation in southeastern Utah"s Natural Bridges
+										National Monument</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo2.jpg" style="width:100%"
+										onclick="openModal();currentSlide(2)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Art and soul </a></h3>
+									<p>Art can seem like a portal to another dimension, as Irish-born artist Laura
+										Buckley </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo3.jpg" style="width:100%"
+										onclick="openModal();currentSlide(3)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">A day for the dolphins</a></h3>
+									<p>We"re celebrating World Dolphin Day with a small pod of pantropical spotted
+										dolphins</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo4.jpg" style="width:100%"
+										onclick="openModal();currentSlide(4)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Floating temples in the Land of Smiles </a></h3>
+									<p>Greetings from northern Thailand, near the city of Lampang, where the mountain
+										peaks have been </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo5.jpg" style="width:100%"
+										onclick="openModal();currentSlide(5)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Who created the Easter Bunny?</a></h3>
+									<p>German Lutherans in the 16th century first came up with the idea of the "Easter
+										hare,".</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo6.jpg" style="width:100%"
+										onclick="openModal();currentSlide(6)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Think deep thoughts</a></h3>
+									<p>Some of you Navy vets—and fans of "20,000 Leagues Under the Sea," "The Hunt for
+										Red October," </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo7.jpg" style="width:100%"
+										onclick="openModal();currentSlide(7)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Brotherly cubs</a></h3>
+									<p>They"re adorable to be sure, but we"re betting these two Kermode bear siblings
+										are a handful hang in there, mama bear!.</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo8.jpg" style="width:100%"
+										onclick="openModal();currentSlide(8)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Hooray, hooray, it s Unicorn Day! </a></h3>
+									<p>Today is Unicorn Day—or what celebrants call "the sparkliest holiday of the
+										year." To honor the mythical horned beast</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo9.jpg" style="width:100%"
+										onclick="openModal();currentSlide(9)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Santorini through the clouds</a></h3>
+									<p>We"re celebrating World Dolphin Day with a small pod of pantropical spotted
+										dolphins</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo10.jpg" style="width:100%"
+										onclick="openModal();currentSlide(10)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Once in a pink moon</a></h3>
+									<p>We"re seeing a vivid "pink moon" rise above St. Michael"s Mount—a
+										granite-encrusted isle connected to the rugged peninsula of Cornwall</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo11.jpg" style="width:100%"
+										onclick="openModal();currentSlide(11)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Castle on a hill</a></h3>
+									<p>In honor of Castle Day in Japan, we"re featuring Himeji Castle—one of the most
+										pristine examples of traditional Japanese castle architecture</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo12.jpg" style="width:100%"
+										onclick="openModal();currentSlide(12)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">The frog prince?</a></h3>
+									<p>Perched among the petals of a purple water lily, we think this petite tree frog
+										makes a fine mascot for National Frog Month" </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:100%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo13.jpg" style="width:100%"
+										onclick="openModal();currentSlide(13)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">In the path of the pronghorn </a></h3>
+									<p>As the days lengthen and spring flowers bloom, herds of pronghorns in Wyoming
+										migrate north from their winter grounds</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo14.jpg" style="width:100%"
+										onclick="openModal();currentSlide(14)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">The rainbow connection</a></h3>
+									<p>April showers bring rainbows, and on April 3, the celebration of Find a Rainbow
+										Day. The rainbow shown here is at Victoria Falls in southern Africa. </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo15.jpg" style="width:100%"
+										onclick="openModal();currentSlide(15)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Pascua Florida Day</a></h3>
+									<p>We"re at the Ponce de León Inlet Light in Central Florida for Pascua Florida Day,
+										which marks the anniversary of the Spanish explorer</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo16.jpg" style="width:100%"
+										onclick="openModal();currentSlide(16)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">It s Census Day—make it count</a></h3>
+									<p>It"s Census Day, and we"re marking the once-in-a-decade head count with this
+										populous pic of nesting king penguins in Antarctica</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo17.jpg" style="width:100%"
+										onclick="openModal();currentSlide(17)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">What a twist </a></h3>
+									<p>No, it"s not a sci-fi movie set—but maybe it should be. The Twist seems like an
+										intrusion from the future amidst the dense woods</p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+							<div class="photo list-item">
+								<div class="photo-preview photo-detail"><img src="images/photo18.jpg" style="width:100%"
+										onclick="openModal();currentSlide(18)" class="hover-shadow cursor"></div>
+								<div class="photo-details">
+									<h3 class="photo-title"><a href="#">Spread some love with Bing</a></h3>
+									<p>We hope this aerial view of Galešnjak, or Love Island, serves as inspiration to
+										spread some love today via our newest feature: Give Mode. </p>
+									<div class="star-rating" title="Rated 1 out of 5"><span style="width:60%"><strong
+												class="rating">1</strong> out of 5</span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="pagination-container">
+					</div>
+					<div id="myModal" class="modal">
+						<span class="close cursor" onclick="closeModal()">&times;</span>
+						<div class="modal-content">
+
+							<div class="mySlides">
+								<div class="numbertext">1 / 18</div>
+								<img src="images/photo1.jpg" style="width:100%">
+							</div>
+
+							<div class="mySlides">
+								<div class="numbertext">2 / 18</div>
+								<img src="images/photo2.jpg" style="width:100%">
+							</div>
+
+							<div class="mySlides">
+								<div class="numbertext">3 / 18</div>
+								<img src="images/photo3.jpg" style="width:100%">
+							</div>
+
+							<div class="mySlides">
+								<div class="numbertext">4 / 18</div>
+								<img src="images/photo4.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">5 / 18</div>
+								<img src="images/photo5.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">6 / 18</div>
+								<img src="images/photo6.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">7 / 18</div>
+								<img src="images/photo7.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">8 / 18</div>
+								<img src="images/photo8.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">9 / 18</div>
+								<img src="images/photo9.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">10 / 18</div>
+								<img src="images/photo10.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">11 / 18</div>
+								<img src="images/photo11.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">12 / 18</div>
+								<img src="images/photo12.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">13 / 18</div>
+								<img src="images/photo13.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">14 / 18</div>
+								<img src="images/photo14.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">15 / 18</div>
+								<img src="images/photo15.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">16 / 18</div>
+								<img src="images/photo16.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">17 / 18</div>
+								<img src="images/photo17.jpg" style="width:100%">
+							</div>
+							<div class="mySlides">
+								<div class="numbertext">18 / 18</div>
+								<img src="images/photo18.jpg" style="width:100%">
+							</div>
+
+							<a class="eprev" onclick="plusSlides(-1)">&#10094;</a>
+							<a class="enext" onclick="plusSlides(1)">&#10095;</a>
+
+							<div class="caption-container">
+								<p id="caption"></p>
+							</div>
+
+
+							<div class="column">
+								<img class="demo cursor" src="images/photo1.jpg" style="width:100%"
+									onclick="currentSlide(1)" alt="Bridges to the past ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo2.jpg" style="width:100%"
+									onclick="currentSlide(2)" alt="Art and soul ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo3.jpg" style="width:100%"
+									onclick="currentSlide(3)" alt="A day for the dolphins">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo4.jpg" style="width:100%"
+									onclick="currentSlide(4)" alt="Floating temples in the Land of Smiles ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo5.jpg" style="width:100%"
+									onclick="currentSlide(5)" alt="Who created the Easter Bunny?">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo6.jpg" style="width:100%"
+									onclick="currentSlide(6)" alt="Think deep thoughts">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo7.jpg" style="width:100%"
+									onclick="currentSlide(7)" alt="Brotherly cubs">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo8.jpg" style="width:100%"
+									onclick="currentSlide(8)" alt="Hooray, hooray, it s Unicorn Day!">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo9.jpg" style="width:100%"
+									onclick="currentSlide(9)" alt="Santorini through the clouds">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo10.jpg" style="width:100%"
+									onclick="currentSlide(10)" alt="Once in a pink moon">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo11.jpg" style="width:100%"
+									onclick="currentSlide(11)" alt="Castle on a hill">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo12.jpg" style="width:100%"
+									onclick="currentSlide(12)" alt="The frog prince?">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo13.jpg" style="width:100%"
+									onclick="currentSlide(13)" alt="In the path of the pronghorn ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo14.jpg" style="width:100%"
+									onclick="currentSlide(14)" alt="The rainbow connection">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo15.jpg" style="width:100%"
+									onclick="currentSlide(15)" alt="Pascua Florida Day">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo16.jpg" style="width:100%"
+									onclick="currentSlide(16)" alt="It s Census Day—make it count ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo17.jpg" style="width:100%"
+									onclick="currentSlide(17)" alt="What a twist ">
+							</div>
+							<div class="column">
+								<img class="demo cursor" src="images/photo18.jpg" style="width:100%"
+									onclick="currentSlide(18)" alt="Spread some love with Bing">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main> <!-- .main-content -->
+		<footer class="site-footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8">
+						<form action="#" class="subscribe-form">
+							<input type="text" placeholder="Enter your email to subscribe...">
+							<input type="submit" value="Subscribe">
+						</form>
+					</div>
+					<div class="col-md-3 col-md-offset-1">
+						<div class="social-links">
+							<a href="#"><i class="fa fa-facebook"></i></a>
+							<a href="#"><i class="fa fa-twitter"></i></a>
+							<a href="#"><i class="fa fa-google-plus"></i></a>
+							<a href="#"><i class="fa fa-pinterest"></i></a>
+						</div>
+					</div>
+				</div>
+
+				<p class="colophon">Copyright 2014 Company name. Designed by Themezy. All rights reserved</p>
+			</div>
+		</footer> <!-- .site-footer -->
+	</div>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/photojs.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.js'></script>
+	<script>
+		var items = $(".list-wrapper .list-item");
+		var numItems = items.length;
+		var perPage = 6;
+		items.slice(perPage).hide();
+
+		$('#pagination-container').pagination({
+			items: numItems,
+			itemsOnPage: perPage,
+			prevText: "&laquo;",
+			nextText: "&raquo;",
+			onPageClick: function (pageNumber) {
+				var showFrom = perPage * (pageNumber - 1);
+				var showTo = showFrom + perPage;
+				items.hide().slice(showFrom, showTo).show();
+			}
+		});
+	</script>
+
+
+</body>
+
+</html>
